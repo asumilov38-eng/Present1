@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Германия 2026 - Экономическая Презентация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* КАСТОМНЫЙ КУРСОР */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffd700;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s;
+            box-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700, 0 0 60px rgba(255, 215, 0, 0.5);
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10001;
+            box-shadow: 0 0 10px #ffd700, 0 0 20px #ffa500;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, border-color 0.3s;
+        }
+
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            border-color: #ff8c00;
+            box-shadow: 0 0 30px #ff8c00, 0 0 60px #ff8c00, 0 0 90px rgba(255, 140, 0, 0.6);
+        }
+
+        .cursor-trail.hover {
+            width: 60px;
+            height: 60px;
+            border-color: rgba(255, 140, 0, 0.5);
+        }
+
+        /* Фоновые сферы */
+        .sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.7;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .sphere-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            top: -150px;
+            left: -150px;
+        }
+
+        .sphere-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #ffa500, #ff6347);
+            top: 40%;
+            right: -100px;
+            animation-delay: -7s;
+        }
+
+        .sphere-3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, #ffed4e, #ff8c00);
+            bottom: -150px;
+            left: 25%;
+            animation-delay: -14s;
+        }
+
+        .sphere-4 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, #ffb347, #ff6347);
+            top: 20%;
+            left: 55%;
+            animation-delay: -21s;
+        }
+
+        .sphere-5 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #ffd700, #ff4500);
+            bottom: 20%;
+            right: 20%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            25% { transform: translate(40px, -60px) scale(1.15) rotate(5deg); }
+            50% { transform: translate(-30px, 40px) scale(0.9) rotate(-5deg); }
+            75% { transform: translate(20px, 30px) scale(1.05) rotate(3deg); }
+        }
+
+        /* Контейнер */
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 2000px;
+        }
+
+        /* Слайд */
+        .slide {
+            position: absolute;
+            width: 85%;
+            max-width: 1400px;
+            height: 88vh;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border-radius: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.6), 
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            padding: 70px;
+            opacity: 0;
+            transform-style: preserve-3d;
+            pointer-events: none;
+            overflow-y: auto;
+            transition: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateZ(0) rotateY(0) rotateX(0) scale(1);
+            pointer-events: all;
+            transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .slide.prev-left {
+            opacity: 0;
+            transform: translateX(-150%) rotateY(-45deg) scale(0.8);
+            transition: all 1s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .slide.next-right {
+            opacity: 0;
+            transform: translateX(150%) rotateY(45deg) scale(0.8);
+            transition: all 1s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .slide.enter-from-bottom {
+            opacity: 0;
+            transform: translateY(100px) rotateX(20deg) scale(0.9);
+        }
+
+        /* Контент */
+        .slide-header {
+            margin-bottom: 50px;
+            border-bottom: 3px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 30px;
+        }
+
+        .slide-subtitle {
+            font-size: 18px;
+            color: #ffa500;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-weight: 600;
+            text-shadow: 0 0 20px rgba(255, 165, 0, 0.5);
+        }
+
+        .slide-title {
+            font-size: 64px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd700 0%, #ffa500 50%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .slide-content {
+            font-size: 21px;
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .slide-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .slide-content li {
+            padding: 18px 0;
+            padding-left: 45px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+        }
+
+        .slide-content li:hover {
+            padding-left: 55px;
+            background: rgba(255, 215, 0, 0.08);
+            border-bottom-color: rgba(255, 215, 0, 0.3);
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.15);
+        }
+
+        .slide-content li::before {
+            content: "◆";
+            position: absolute;
+            left: 15px;
+            color: #ffd700;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .slide-content li:hover::before {
+            transform: scale(1.3) rotate(15deg);
+            color: #ffa500;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .stat-box {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+            padding: 20px 35px;
+            border-radius: 20px;
+            margin: 15px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.6);
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: bold;
+            color: #ffd700;
+            display: block;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
+        }
+
+        /* Кнопки */
+        .nav-buttons {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .btn {
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border: none;
+            border-radius: 35px;
+            color: #0a0a0a;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 20px;
+            font-weight: 600;
+            min-width: 100px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Прогресс */
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ff8c00, #ff4500);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Колонки */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 30px;
+        }
+
+        .column h3 {
+            color: #ffd700;
+            font-size: 28px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        /* Изображения */
+        .image-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.4s;
+        }
+
+        .image-container:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(255, 215, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 30px 20px 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Галерея городов */
+        .cities-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .city-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 250px;
+            border: 3px solid rgba(255, 215, 0, 0.2);
+            transition: all 0.4s;
+        }
+
+        .city-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 0 25px 60px rgba(255, 215, 0, 0.3);
+        }
+
+        .city-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .city-card:hover img {
+            transform: scale(1.15);
+        }
+
+        .city-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+            padding: 25px 20px 20px;
+        }
+
+        .city-name {
+            font-size: 26px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .city-population {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-text {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .animate-scale {
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* Скролл */
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ffd700, #ff8c00);
+            border-radius: 10px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px;
+                width: 92%;
+            }
+            .slide-title {
+                font-size: 42px;
+            }
+            .two-columns, .cities-gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Индикаторы */
+        .slide-indicators {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: none;
+            transition: all 0.4s;
+            border: 2px solid transparent;
+        }
+
+        .indicator.active {
+            background: #ffd700;
+            transform: scale(1.5);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .indicator:hover {
+            background: rgba(255, 215, 0, 0.6);
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Курсор -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-trail" id="cursorTrail"></div>
+
+    <!-- Сферы -->
+    <div class="sphere sphere-1"></div>
+    <div class="sphere sphere-2"></div>
+    <div class="sphere sphere-3"></div>
+    <div class="sphere sphere-4"></div>
+    <div class="sphere sphere-5"></div>
+
+    <div class="presentation-container">
+        <div class="slide-indicators" id="indicators"></div>
+
+        <!-- СЛАЙД 1: Титульный -->
+        <div class="slide active" data-slide="0">
+            <div class="slide-header" style="border: none; text-align: center; margin-top: 80px;">
+                <div class="slide-subtitle animate-text" style="font-size: 24px; letter-spacing: 8px;">3D GLASSMORPHISM PRESENTATION</div>
+                <h1 class="slide-title animate-text delay-1" style="font-size: 72px; margin: 40px 0;">ФЕДЕРАТИВНАЯ<br>РЕСПУБЛИКА<br>ГЕРМАНИЯ</h1>
+                <p class="animate-text delay-2" style="font-size: 28px; color: rgba(255,255,255,0.8); margin: 30px 0;">
+                    ЭКОНОМИЧЕСКОЕ ПОЛОЖЕНИЕ И РАЗВИТИЕ<br>
+                    <span style="color: #ffa500; font-size: 24px;">2026 ГОД</span>
+                </p>
+            </div>
+            <div class="image-container animate-text delay-3" style="max-width: 800px; margin: 50px auto;">
+                <img src="images/berlin-gate.jpg" alt="Germany">
+                <div class="image-caption">Бранденбургские ворота, Берлин</div>
+            </div>
+            <div class="slide-content animate-text delay-4" style="text-align: center; margin-top: 40px;">
+                <p style="font-size: 22px; color: rgba(255,255,255,0.6);">
+                    Презентацию подготовил:<br>
+                    <span class="highlight" style="font-size: 28px;">АНДРЕЙ ШУМИЛОВ</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 2: География -->
+        <div class="slide" data-slide="1">
+            <div class="slide-header">
+                <div class="slide-subtitle">ГЕОГРАФИЯ И РАСПОЛОЖЕНИЕ</div>
+                <h1 class="slide-title">ОБЩАЯ ИНФОРМАЦИЯ</h1>
+            </div>
+            <div class="slide-content">
+                <div class="two-columns">
+                    <div class="column">
+                        <div class="image-container">
+                            <img src="images/germany-map.jpg" alt="Germany Map">
+                            <div class="image-caption">Германия в центре Европы</div>
+                        </div>
+                        <ul>
+                            <li><span class="highlight">Официальное название:</span> Федеративная Республика Германия (ФРГ)</li>
+                            <li><span class="highlight">Столица:</span> Берлин (население 3.75 млн)</li>
+                            <li><span class="highlight">Площадь:</span> 357,022 км² (63-е место в мире)</li>
+                            <li><span class="highlight">Валюта:</span> Евро (EUR, €) с 2002 года</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <ul>
+                            <li><span class="highlight">Форма правления:</span> Федеративная парламентская республика</li>
+                            <li><span class="highlight">Канцлер:</span> Олаф Шольц (с декабря 2021)</li>
+                            <li><span class="highlight">16 федеральных земель</span></li>
+                            <li><span class="highlight">Граничит с 9 странами</span></li>
+                            <li><span class="highlight">Население:</span> 84.8 млн человек</li>
+                            <li><span class="highlight">Членство:</span> ЕС, НАТО, G7, G20, ООН</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 3: Население -->
+        <div class="slide" data-slide="2">
+            <div class="slide-header">
+                <div class="slide-subtitle">ДЕМОГРАФИЯ 2026</div>
+                <h1 class="slide-title">НАСЕЛЕНИЕ</h1>
+            </div>
+            <div class="slide-content">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div class="stat-box animate-scale">
+                        <span class="stat-number">84.8</span>
+                        <div class="stat-label">млн человек</div>
+                    </div>
+                    <div class="stat-box animate-scale delay-1">
+                        <span class="stat-number">238</span>
+                        <div class="stat-label">чел/км²</div>
+                    </div>
+                    <div class="stat-box animate-scale delay-2">
+                        <span class="stat-number">45.5</span>
+                        <div class="stat-label">средний возраст</div>
+                    </div>
+                </div>
+                <div class="two-columns">
+                    <div class="column">
+                        <div class="image-container">
+                            <img src="images/people.jpg" alt="People">
+                            <div class="image-caption">Современное немецкое общество</div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <h3>ДЕМОГРАФИЧЕСКИЕ ПОКАЗАТЕЛИ</h3>
+                        <ul>
+                            <li><span class="highlight">Городское население:</span> 77.8% (66 млн)</li>
+                            <li><span class="highlight">Рождаемость:</span> 9.3 на 1000 человек</li>
+                            <li><span class="highlight">Продолжительность жизни:</span> 81.2 года</li>
+                            <li><span class="highlight">Уровень грамотности:</span> 99%</li>
+                            <li><span class="highlight">Этнический состав:</span><br>
+                                &nbsp;&nbsp;• Немцы: 80.3%<br>
+                                &nbsp;&nbsp;• Турки: 3.1%<br>
+                                &nbsp;&nbsp;• Другие: 16.6%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 4: ВВП -->
+        <div class="slide" data-slide="3">
+            <div class="slide-header">
+                <div class="slide-subtitle">ЭКОНОМИКА 2026</div>
+                <h1 class="slide-title">ВВП И МАКРОЭКОНОМИКА</h1>
+            </div>
+            <div class="slide-content">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <div class="stat-box animate-scale">
+                        <span class="stat-number">$4.68</span>
+                        <div class="stat-label">трлн $ ВВП</div>
+                    </div>
+                    <div class="stat-box animate-scale delay-1">
+                        <span class="stat-number">$55,200</span>
+                        <div class="stat-label">ВВП на душу</div>
+                    </div>
+                    <div class="stat-box animate-scale delay-2">
+                        <span class="stat-number">3</span>
+                        <div class="stat-label">место в мире</div>
+                    </div>
+                </div>
+                <div class="image-container" style="max-width: 900px; margin: 30px auto;">
+                    <img src="images/frankfurt.jpg" alt="Frankfurt">
+                    <div class="image-caption">Франкфурт - финансовый центр Европы</div>
+                </div>
+                <div class="two-columns">
+                    <div class="column">
+                        <h3>ОСНОВНЫЕ ПОКАЗАТЕЛИ</h3>
+                        <ul>
+                            <li><span class="highlight">Рост ВВП 2026:</span> +0.9%</li>
+                            <li><span class="highlight">Услуги:</span> 68.9%</li>
+                            <li><span class="highlight">Промышленность:</span> 26.8%</li>
+                            <li><span class="highlight">Инфляция:</span> 2.1%</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <h3>ГОСУДАРСТВЕННЫЕ ФИНАНСЫ</h3>
+                        <ul>
+                            <li><span class="highlight">Госдолг:</span> 61.8% ВВП</li>
+                            <li><span class="highlight">Кредитный рейтинг:</span> AAA</li>
+                            <li><span class="highlight">Резервы:</span> $185 млрд</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 5: Автомобили -->
+        <div class="slide" data-slide="4">
+            <div class="slide-header">
+                <div class="slide-subtitle">АВТОМОБИЛЕСТРОЕНИЕ</div>
+                <h1 class="slide-title">НЕМЕЦКИЕ АВТО</h1>
+            </div>
+            <div class="slide-content">
+                <div class="two-columns">
+                    <div class="column">
+                        <div class="image-container">
+                            <img src="images/bmw.jpg" alt="BMW">
+                            <div class="image-caption">BMW - немецкое качество</div>
+                        </div>
+                        <ul>
+                            <li><span class="highlight">Производство:</span> 4.2 млн авто/год</li>
+                            <li><span class="highlight">Экспорт:</span> €245 млрд</li>
+                            <li><span class="highlight">Занятость:</span> 830,000 человек</li>
+                            <li><span class="highlight">Электромобили:</span> 32% (2026)</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <div class="image-container">
+                            <img src="images/porsche.jpg" alt="Porsche">
+                            <div class="image-caption">Porsche - спорткары</div>
+                        </div>
+                        <ul>
+                            <li><span class="highlight">Бренды:</span><br>
+                                &nbsp;&nbsp;• Volkswagen Group<br>
+                                &nbsp;&nbsp;• Mercedes-Benz<br>
+                                &nbsp;&nbsp;• BMW<br>
+                                &nbsp;&nbsp;• Porsche<br>
+                                &nbsp;&nbsp;• Audi</li>
+                            <li><span class="highlight">4-е место в мире</span> по производству</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 6: Города -->
+        <div class="slide" data-slide="5">
+            <div class="slide-header">
+                <div class="slide-subtitle">ГОРОДСКАЯ ИНФРАСТРУКТУРА</div>
+                <h1 class="slide-title">КРУПНЕЙШИЕ ГОРОДА</h1>
+            </div>
+            <div class="cities-gallery">
+                <div class="city-card">
+                    <img src="images/berlin-city.jpg" alt="Berlin">
+                    <div class="city-overlay">
+                        <div class="city-name">Берлин</div>
+                        <div class="city-population">3.76 млн чел • Столица</div>
+                    </div>
+                </div>
+                <div class="city-card">
+                    <img src="images/munich.jpg" alt="Munich">
+                    <div class="city-overlay">
+                        <div class="city-name">Мюнхен</div>
+                        <div class="city-population">1.51 млн • BMW, Siemens</div>
+                    </div>
+                </div>
+                <div class="city-card">
+                    <img src="images/hamburg.jpg" alt="Hamburg">
+                    <div class="city-overlay">
+                        <div class="city-name">Гамбург</div>
+                        <div class="city-population">1.89 млн • Порт</div>
+                    </div>
+                </div>
+                <div class="city-card">
+                    <img src="images/frankfurt-city.jpg" alt="Frankfurt">
+                    <div class="city-overlay">
+                        <div class="city-name">Франкфурт</div>
+                        <div class="city-population">763 тыс • Финансы</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 7: Промышленность -->
+        <div class="slide" data-slide="6">
+            <div class="slide-header">
+                <div class="slide-subtitle">ПРОМЫШЛЕННЫЙ СЕКТОР</div>
+                <h1 class="slide-title">ВЕДУЩИЕ ОТРАСЛИ</h1>
+            </div>
+            <div class="slide-content">
+                <div class="two-columns">
+                    <div class="column">
+                        <div class="image-container">
+                            <img src="images/industry.jpg" alt="Industry">
+                            <div class="image-caption">Современное производство</div>
+                        </div>
+                        <ul>
+                            <li><span class="highlight">Машиностроение:</span> €238 млрд</li>
+                            <li><span class="highlight">Химия:</span> BASF, Bayer</li>
+                            <li><span class="highlight">Электротехника:</span> Siemens, Bosch</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <div class="image-container">
+                            <img src="images/technology.jpg" alt="Technology">
+                            <div class="image-caption">Высокие технологии</div>
+                        </div>
+                        <ul>
+                            <li><span class="highlight">Фармацевтика:</span> €78 млрд</li>
+                            <li><span class="highlight">Аэрокосмос:</span> Airbus</li>
+                            <li><span class="highlight">Пищевая:</span> €195 млрд</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 8: Энергетика -->
+        <div class="slide" data-slide="7">
+            <div class="slide-header">
+                <div class="slide-subtitle">ЭНЕРГЕТИКА 2026</div>
+                <h1 class="slide-title">ENERGIEWENDE</h1>
+            </div>
+            <div class="slide-content">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div class="stat-box animate-scale">
+                        <span class="stat-number">56%</span>
+                        <div class="stat-label">ВИЭ в производстве</div>
+                    </div>
+                    <div class="stat-box animate-scale delay-1">
+                        <span class="stat-number">0%</span>
+                        <div class="stat-label">АЭС (закрыты)</div>
+                    </div>
+                </div>
+                <div class="image-container" style="max-width: 900px; margin: 30px auto;">
+                    <img src="images/wind-energy.jpg" alt="Wind Energy">
+                    <div class="image-caption">Ветряные электростанции</div>
+                </div>
+                <div class="two-columns">
+                    <div class="column">
+                        <h3>СТРУКТУРА</h3>
+                        <ul>
+                            <li><span class="highlight">Ветровая:</span> 29.5%</li>
+                            <li><span class="highlight">Солнечная:</span> 12.8%</li>
+                            <li><span class="highlight">Биомасса:</span> 8.2%</li>
+                            <li><span class="highlight">Уголь:</span> 24.5%</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <h3>ЦЕЛИ</h3>
+                        <ul>
+                            <li><span class="highlight">2030:</span> 80% ВИЭ</li>
+                            <li><span class="highlight">2045:</span> Климатическая нейтральность</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 9: Инновации -->
+        <div class="slide" data-slide="8">
+            <div class="slide-header">
+                <div class="slide-subtitle">ИННОВАЦИИ</div>
+                <h1 class="slide-title">INDUSTRIE 4.0</h1>
+            </div>
+            <div class="slide-content">
+                <div class="two-columns">
+                    <div class="column">
+                        <div class="image-container">
+                            <img src="images/ai.jpg" alt="AI">
+                            <div class="image-caption">Искусственный интеллект</div>
+                        </div>
+                        <ul>
+                            <li><span class="highlight">НИОКР:</span> €118 млрд (3.2% ВВП)</li>
+                            <li><span class="highlight">ИИ:</span> €5 млрд инвестиций</li>
+                            <li><span class="highlight">Кванты:</span> €2 млрд программа</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <div class="image-container">
+                            <img src="images/tech.jpg" alt="Tech">
+                            <div class="image-caption">Передовые технологии</div>
+                        </div>
+                        <ul>
+                            <li><span class="highlight">SAP:</span> Крупнейший ПО в Европе</li>
+                            <li><span class="highlight">Siemens:</span> Умные города</li>
+                            <li><span class="highlight">Стартапы:</span> 2,800+ компаний</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЛАЙД 10: Заключение -->
+        <div class="slide" data-slide="9">
+            <div class="slide-header">
+                <div class="slide-subtitle">ЗАКЛЮЧЕНИЕ</div>
+                <h1 class="slide-title">ГЕРМАНИЯ - ЛИДЕР ЕВРОПЫ</h1>
+            </div>
+            <div class="slide-content">
+                <div class="image-container" style="max-width: 1000px; margin: 30px auto;">
+                    <img src="images/germany-final.jpg" alt="Germany">
+                    <div class="image-caption">Экономический двигатель Европы</div>
+                </div>
+                <div class="two-columns">
+                    <div class="column">
+                        <h3>СИЛЬНЫЕ СТОРОНЫ</h3>
+                        <ul>
+                            <li><span class="highlight">✓</span> Мощная промышленность</li>
+                            <li><span class="highlight">✓</span> Инновации и R&D</li>
+                            <li><span class="highlight">✓</span> Квалифицированная рабочая сила</li>
+                            <li><span class="highlight">✓</span> Стабильная политика</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <h3>ПЕРСПЕКТИВЫ</h3>
+                        <ul>
+                            <li><span class="highlight">→</span> Зелёный переход</li>
+                            <li><span class="highlight">→</span> Цифровизация</li>
+                            <li><span class="highlight">→</span> Электромобильность</li>
+                            <li><span class="highlight">→</span> Лидерство в ЕС</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 50px; padding: 40px; background: rgba(255, 215, 0, 0.08); border-radius: 25px; border: 2px solid rgba(255, 215, 0, 0.3);">
+                    <p style="font-size: 28px; color: #ffd700; margin-bottom: 20px; font-weight: bold;">ПРЕЗЕНТАЦИЮ ПОДГОТОВИЛ</p>
+                    <p style="font-size: 36px; color: #ffa500; text-shadow: 0 0 30px rgba(255, 165, 0, 0.6);">АНДРЕЙ ШУМИЛОВ</p>
+                    <p style="font-size: 20px; color: rgba(255,255,255,0.7); margin-top: 15px;">2026 год</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Навигация -->
+        <div class="nav-buttons">
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">← Назад</button>
+            <div class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">10</span></div>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Вперёд →</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <script>
+        // Курсор
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursorDot');
+        const cursorTrail = document.getElementById('cursorTrail');
+        
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        let dotX = 0, dotY = 0;
+        let trailX = 0, trailY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.2;
+            cursorY += (mouseY - cursorY) * 0.2;
+            dotX += (mouseX - dotX) * 0.5;
+            dotY += (mouseY - dotY) * 0.5;
+            trailX += (mouseX - trailX) * 0.1;
+            trailY += (mouseY - trailY) * 0.1;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            cursorDot.style.left = dotX + 'px';
+            cursorDot.style.top = dotY + 'px';
+            cursorTrail.style.left = trailX + 'px';
+            cursorTrail.style.top = trailY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Hover эффекты
+        document.querySelectorAll('button, .indicator, .city-card, .image-container, .stat-box').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('hover');
+                cursorTrail.classList.add('hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hover');
+                cursorTrail.classList.remove('hover');
+            });
+        });
+
+        // Слайды
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let isAnimating = false;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+        
+        // Индикаторы
+        const indicatorsContainer = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = 'indicator' + (i === 0 ? ' active' : '');
+            indicator.onclick = () => goToSlide(i);
+            indicatorsContainer.appendChild(indicator);
+        }
+
+        function goToSlide(index) {
+            if (isAnimating || index === currentSlideIndex) return;
+            const direction = index > currentSlideIndex ? 1 : -1;
+            changeSlide(direction, index);
+        }
+
+        function changeSlide(direction, targetIndex = null) {
+            if (isAnimating) return;
+            isAnimating = true;
+            
+            const targetSlide = targetIndex !== null ? slides[targetIndex] : slides[currentSlideIndex + direction];
+            if (!targetSlide) {
+                isAnimating = false;
+                return;
+            }
+            
+            const currentSlideEl = slides[currentSlideIndex];
+            
+            if (direction > 0) {
+                currentSlideEl.classList.remove('active');
+                currentSlideEl.classList.add('prev-left');
+            } else {
+                currentSlideEl.classList.remove('active');
+                currentSlideEl.classList.add('next-right');
+            }
+            
+            targetSlide.classList.remove('prev-left', 'next-right');
+            targetSlide.classList.add('enter-from-bottom');
+            
+            setTimeout(() => {
+                targetSlide.classList.remove('enter-from-bottom');
+                targetSlide.classList.add('active');
+                
+                if (targetIndex !== null) {
+                    currentSlideIndex = targetIndex;
+                } else {
+                    currentSlideIndex += direction;
+                }
+                
+                updateSlide();
+                isAnimating = false;
+            }, 300);
+        }
+
+        function updateSlide() {
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+            const progress = ((currentSlideIndex + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+            document.getElementById('nextBtn').textContent = 
+                currentSlideIndex === totalSlides - 1 ? 'Завершить ✓' : 'Вперёд →';
+            
+            document.querySelectorAll('.indicator').forEach((ind, idx) => {
+                ind.classList.toggle('active', idx === currentSlideIndex);
+            });
+            
+            const animatedElements = document.querySelectorAll('.slide.active .animate-text, .slide.active .animate-scale');
+            animatedElements.forEach(el => {
+                el.style.animation = 'none';
+                setTimeout(() => {
+                    el.style.animation = '';
+                }, 10);
+            });
+        }
+
+        // Клавиатура
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentSlideIndex < totalSlides - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentSlideIndex > 0) changeSlide(-1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                goToSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                goToSlide(totalSlides - 1);
+            }
+        });
+
+        // Свайпы
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        document.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].screenX - touchStartX;
+            if (dx < -50 && currentSlideIndex < totalSlides - 1) changeSlide(1);
+            if (dx > 50 && currentSlideIndex > 0) changeSlide(-1);
+        }, {passive: true});
+
+        // УБРАЛ КОЛЁСИКО МЫШИ - ТЕПЕРЬ ОНО ПРОСТО СКРОЛЛИТ СТРАНИЦУ!
+    </script>
+</body>
+</html>
